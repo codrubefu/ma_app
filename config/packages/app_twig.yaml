@@ -1,0 +1,3 @@
+twig:
+  globals:
+    userHelper: '@App\Service\app_userInfo'
