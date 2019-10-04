@@ -1,5 +1,6 @@
 <?php
 
+namespace App\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;
@@ -48,6 +49,86 @@ class Club
      * @ORM\Column(name="infos", type="text", length=65535, nullable=false)
      */
     private $infos;
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCity(): string
+    {
+        return $this->city;
+    }
+
+    /**
+     * @param string $city
+     */
+    public function setCity(string $city): void
+    {
+        $this->city = $city;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCountry(): string
+    {
+        return $this->country;
+    }
+
+    /**
+     * @param string $country
+     */
+    public function setCountry(string $country): void
+    {
+        $this->country = $country;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInfos(): string
+    {
+        return $this->infos;
+    }
+
+    /**
+     * @param string $infos
+     */
+    public function setInfos(string $infos): void
+    {
+        $this->infos = $infos;
+    }
 
 
 }

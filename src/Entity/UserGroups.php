@@ -1,5 +1,6 @@
 <?php
 
+namespace App\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;
@@ -42,5 +43,54 @@ class UserGroups
     {
         $this->userid = new \Doctrine\Common\Collections\ArrayCollection();
     }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string|null $name
+     */
+    public function setName(?string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUserid(): \Doctrine\Common\Collections\Collection
+    {
+        return $this->userid;
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\Collection $userid
+     */
+    public function setUserid(\Doctrine\Common\Collections\Collection $userid): void
+    {
+        $this->userid = $userid;
+    }
+
 
 }
