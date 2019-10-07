@@ -2,267 +2,112 @@
 
 namespace App\Entity;
 
-
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Users
- *
- * @ORM\Table(name="users", indexes={@ORM\Index(name="clubid", columns={"clubid"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\UsersRepository")
  */
-class Users
+class Users implements UserInterface
 {
     /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="slug", type="string", length=100, nullable=false)
-     */
-    private $slug;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="fname", type="string", length=100, nullable=false)
-     */
-    private $fname;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="lname", type="string", length=100, nullable=false)
-     */
-    private $lname;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="email", type="string", length=100, nullable=false)
+     * @ORM\Column(type="string", length=180, unique=true)
      */
     private $email;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="phone", type="string", length=100, nullable=false)
+     * @ORM\Column(type="json")
      */
-    private $phone;
+    private $roles = [];
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="address", type="string", length=100, nullable=true)
+     * @var string The hashed password
+     * @ORM\Column(type="string")
      */
-    private $address;
+    private $password;
 
-    /**
-     * @var \Club
-     *
-     * @ORM\ManyToOne(targetEntity="Club")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="clubid", referencedColumnName="id")
-     * })
-     */
-    private $clubid;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\ManyToMany(targetEntity="Events", mappedBy="userid")
-     */
-    private $eventid;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\ManyToMany(targetEntity="UserGroups", inversedBy="userid")
-     * @ORM\JoinTable(name="user2groups",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="userid", referencedColumnName="id")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="groupid", referencedColumnName="id")
-     *   }
-     * )
-     */
-    private $groupid;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->eventid = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->groupid = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
-     * @return int
-     */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFname(): string
-    {
-        return $this->fname;
-    }
-
-    /**
-     * @param string $fname
-     */
-    public function setFname(string $fname): void
-    {
-        $this->fname = $fname;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLname(): string
-    {
-        return $this->lname;
-    }
-
-    /**
-     * @param string $lname
-     */
-    public function setLname(string $lname): void
-    {
-        $this->lname = $lname;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    /**
-     * @param string $email
-     */
-    public function setEmail(string $email): void
+    public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
      */
-    public function getPhone(): string
+    public function getUsername(): string
     {
-        return $this->phone;
+        return (string) $this->email;
     }
 
     /**
-     * @param string $phone
+     * @see UserInterface
      */
-    public function setPhone(string $phone): void
+    public function getRoles(): array
     {
-        $this->phone = $phone;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * @see UserInterface
      */
-    public function getAddress(): string
+    public function getPassword(): string
     {
-        return $this->address;
+        return (string) $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
     }
 
     /**
-     * @param string $address
+     * @see UserInterface
      */
-    public function setAddress(string $address): void
+    public function getSalt()
     {
-        $this->address = $address;
+        // not needed when using the "bcrypt" algorithm in security.yaml
     }
 
     /**
-     * @return Club
+     * @see UserInterface
      */
-    public function getClubid(): Club
+    public function eraseCredentials()
     {
-        return $this->clubid;
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
-
-    /**
-     * @param Club $clubid
-     */
-    public function setClubid(Club $clubid): void
-    {
-        $this->clubid = $clubid;
-    }
-
-    /**
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getEventid(): \Doctrine\Common\Collections\Collection
-    {
-        return $this->eventid;
-    }
-
-    /**
-     * @param \Doctrine\Common\Collections\Collection $eventid
-     */
-    public function setEventid(\Doctrine\Common\Collections\Collection $eventid): void
-    {
-        $this->eventid = $eventid;
-    }
-
-    /**
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getGroupid(): \Doctrine\Common\Collections\Collection
-    {
-        return $this->groupid;
-    }
-
-    /**
-     * @param \Doctrine\Common\Collections\Collection $groupid
-     */
-    public function setGroupid(\Doctrine\Common\Collections\Collection $groupid): void
-    {
-        $this->groupid = $groupid;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSlug(): string
-    {
-        return $this->slug;
-    }
-
-    /**
-     * @param string $slug
-     */
-    public function setSlug(string $slug): void
-    {
-        $this->slug = strtolower($this->getFname()."_".$this->getLname());
-    }
-
 }

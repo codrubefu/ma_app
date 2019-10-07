@@ -5,8 +5,10 @@ namespace App\Controller\user;
 
 
 use App\Entity\Users;
+use App\Form\UserFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class UserAddController extends AbstractController
@@ -16,21 +18,19 @@ class UserAddController extends AbstractController
      * @Route("user/add")
      */
 
-    public function add()
+    public function add(Request $request)
     {
 
-        $user = new Users();
-        $user->setFname('Codrut');
-        $user->setLname('Befu');
-        $user->setSlug('Befu');
-        $user->setEmail('cb@sologics.de');
-        $user->setPhone('0757352306');
-        $user->setAddress('0757352306');
+       $form=$this->createForm(UserFormType::class);
 
-        $em=$this->getDoctrine()->getManager();
-        $em->persist($user);
-        $em->flush();
+       $form->handleRequest($request);
 
-        return $this->render('user/add.html.twig');
+       if($form->isSubmitted() && $form->isValid()){
+           dd($form->getData());
+       }
+
+        return $this->render('user/add.html.twig',[
+            'userForm' => $form->createView()
+        ]);
     }
 }
